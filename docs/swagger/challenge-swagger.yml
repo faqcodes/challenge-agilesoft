@@ -1,0 +1,453 @@
+openapi: '3.0.2'
+info:
+  title: Agilesoft Challenge API
+  version: '1.0.0'
+  description: >
+    El servicio Agilesoft Challenge API expone las operaciones necesarias para el registro de usuarios y sus tareas
+servers:
+  - url: 'http://localhost:8080/api'
+    description: Local Development Environment
+paths:
+  /users/signin:
+    post:
+      tags:
+        - Users
+      requestBody:
+        description: Objeto con datos para el el inicio de sesión de un usuario. Todos los campos son obligatorios
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SigninRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SigninResponse200'
+          description: El usuario ha iniciado sesión satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SigninResponse400'
+          description: Error al iniciar sesión
+  /users/signup:
+    post:
+      tags:
+        - Users
+      requestBody:
+        description: Objeto con datos para el registro de un usuario. Todos los campos son obligatorios
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponse201'
+          description: La fruta y su variedad se ha agregado satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponse400'
+          description: Error al agregar la fruta y su variedad
+  /users:
+    get:
+      tags:
+        - Users
+      description: Obtiene los datos del usuario desde la sesión
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse200'
+          description: Se ha obtenido los datos del usuario satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse400'
+          description: Error al objetener los datos del usuario
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      description: Obtiene una listado de tareas del usuario y su estado
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse200'
+          description: Las tareas se han obtenido satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse400'
+          description: Error al obtener las tareas del usuario
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse404'
+          description: No se encontraron las tareas del usuario
+    post:
+      tags:
+        - Tasks
+      requestBody:
+        description: Objeto con datos para crear una tarea. Todos los campos son obligatorios
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreateRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCreateResponse201'
+          description: La tarea se ha agregado satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCreateResponse400'
+          description: Error al agregar la tarea
+    put:
+      tags:
+        - Tasks
+      requestBody:
+        description: Objeto con datos para marcar la tarea como resuelta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskUpdateResponse200'
+          description: La tarea se ha marcado satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskUpdateResponse400'
+          description: Error al marcar la tarea
+    delete:
+      tags:
+        - Tasks
+      requestBody:
+        description: Objeto con datos para eliminar una tarea
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDeleteRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDeleteResponse200'
+          description: La tarea se ha eliminado satisfactoriamente
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDeleteResponse400'
+          description: Error al eliminar la tarea
+components:
+  schemas:
+    SigninRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          required:
+            - 'El nombre de usuario es un campo requerido'
+          description: Nombre de usuario
+          example: fquiroz
+        password:
+          type: string
+          required:
+            - 'La contraseña es un campo requerido'
+          description: Contraseña
+    SigninResponse200:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example: El usuario ha iniciado sesión satisfactoriamente
+        data:
+          $ref: '#/components/schemas/SigninResponse'
+    SigninResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al agregar la fruta y su variedad
+    SignupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          required:
+            - El campo name es requerido
+          description: Nombre del usuario
+        username:
+          type: string
+          required:
+            - El campo username es requerido
+          description: Nombre de usuario
+        password:
+          type: string
+          required:
+            - 'La contraseña es un campo requerido'
+          description: Contraseña
+    SignupResponse201:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example:
+    SignupResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al agregar la cosecha
+    SignupResponse404:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al agregar la cosecha. Una de las referencias requeridas no fue encontrada
+    UserResponse200:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example: Se ha obtenido los datos del usuario satisfactoriamente
+        data:
+          $ref: '#/components/schemas/UserResponse'
+    UserResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al objetener los datos del usuario
+    TaskListResponse200:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example: Las tareas se han obtenido satisfactoriamente
+        data:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/TaskResponse'
+    TaskListResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al obtener las tareas del usuario
+    TaskListResponse404:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: No se encontraron las tareas del usuario
+    TaskCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          required:
+            - El campo name es requerido
+          description: Nombre de la tarea
+        description:
+          type: string
+          required:
+            - El campo description es requerido
+          description: Descripción de la tarea
+    TaskCreateResponse201:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example: La tarea se ha agregado satisfactoriamente
+    TaskCreateResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al agregar la tarea
+    TaskUpdateRequest:
+      type: object
+      properties:
+        taskId:
+          type: string
+          description: ID de la tarea (UUID)
+          example: 848bb2eb-b170-43be-ada9-d4fd9febd973
+        status:
+          type: boolean
+          description: Estado de la tarea
+          example: true
+    TaskUpdateResponse200:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example: La tarea se ha marcado satisfactoriamente
+    TaskUpdateResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al marcar la tarea
+    TaskDeleteRequest:
+      type: object
+      properties:
+        taskId:
+          type: string
+          description: ID de la tarea (UUID)
+          example: 848bb2eb-b170-43be-ada9-d4fd9febd973
+    TaskDeleteResponse200:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de respuesta
+          example: SUCCESS
+        message:
+          type: string
+          description: Descripción de la respuesta
+          example: La tarea se ha eliminado satisfactoriamente
+    TaskDeleteResponse400:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del respuesta
+          example: ERROR
+        message:
+          type: string
+          description: Descripción del error
+          example: Error al eliminar la tarea
+
+    SigninResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token de inicio de sesión
+    UserResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre del usuario
+        username:
+          type: string
+          description: Nombre de usuario
+    TaskResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la tarea
+        description:
+          type: string
+          description: Descripción de la tarea
+        create_at:
+          type: string
+          description: Fecha de creación
+        update_at:
+          type: string
+          description: Fecha de actualización
+        status:
+          type: boolean
+          description: Tarea marcada como completada si/no

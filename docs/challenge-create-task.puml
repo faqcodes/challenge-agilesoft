@@ -1,0 +1,63 @@
+@startuml
+
+title **Add task to user**
+
+autonumber "<b>[00]"
+'skinparam monochrome true
+skinparam shadowing false
+skinparam maxmessagesize 150
+skinparam NoteBorderColor #c7c7c7
+skinparam ParticipantBorderColor #c9c9c9
+skinparam CollectionsBorderColor #c9c9c9
+skinparam QueueBorderColor #c9c9c9
+
+participant ms_external_device as "device" << external request >>
+participant ms_controller_api as "controller" << infrastructure >>
+participant ms_usecase_api as "use cases" << application >>
+participant ms_domain_api as "entities" << domain >>
+participant ms_repository_api as "repository" << infrastructure >>
+
+...
+
+note right ms_external_device #d6eeff: <b>[POST]</b>\n<font color=blue>/api/tasks</font>
+ms_external_device -> ms_controller_api:
+    activate ms_external_device
+
+    note right of ms_controller_api #e4ffd6: Para la creación de una tarea se debe entregar \nla siguiente información por medio del modelo **<taskModel>**:\n\n **name**: nombre de la tarea\n **description**: descripción de la tarea\n\n **supuestos**: solo el usuario que inicia sesión puede crear sus tareas\n
+
+    activate ms_controller_api
+
+    hnote over ms_controller_api #efe0ff: **SCHEMA VALIDATION**:\n\nValidación de datos de entrada para la tarea:\n\n - Todos los datos son obligatorios\n
+    ms_controller_api -> ms_controller_api: isValid(taskModel)
+
+    ms_controller_api -> ms_usecase_api: create(taskModel)
+        activate ms_usecase_api
+
+        hnote over ms_usecase_api #efe0ff: **APPLICATION RULE**:\n\nReglas para la creación de la tarea:\n\n - Si el nombre de la tarea ya existe no la crea\n   y retorna mensaje correspondiente\n - El usuario que inicia sesión es quién crea su tarea  \n
+        ms_usecase_api -> ms_usecase_api: taskExists(name)
+        ms_usecase_api -> ms_usecase_api: getUserId(token)
+
+        note right of ms_usecase_api #e4ffd6: Con la información de la tarea\n**se crea la entidad de negocio Task**
+        ms_usecase_api -> ms_domain_api: create(task)
+            activate ms_domain_api
+
+            hnote over ms_domain_api #efe0ff: **BUSINESS RULE**:\n\nNo existen reglas de negocio, 'canCreate' siempre devuelve verdadero\n
+            ms_domain_api -> ms_domain_api: **canCreate()**
+
+        return :Task
+
+        note right of ms_usecase_api #e4ffd6: Se guarda la tarea en la base de datos
+        ms_usecase_api -> ms_repository_api: save(task)
+            activate ms_repository_api
+            return :ok
+
+    return Result<Task>
+
+return **Task Created: [201]**\n\nResponse<TaskModel>
+
+deactivate ms_external_device
+
+...
+...
+
+@enduml

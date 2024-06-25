@@ -147,13 +147,13 @@ paths:
     delete:
       tags:
         - Tasks
-      requestBody:
-        description: Objeto con datos para eliminar una tarea
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TaskDeleteRequest'
-        required: true
+      parameters:
+        - name: taskId
+          in: query
+          description: ID de la tarea a eliminar
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           content:

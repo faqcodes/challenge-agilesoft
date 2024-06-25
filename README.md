@@ -34,6 +34,25 @@ A continuación, se presenta el diagrama de secuencia del caso de uso *Agregar t
 
 ![Diagrama de secuencia](docs/images/challenge-sequence.png)
 
+## Diseño detallado
+
+A continuación se presenta el diseño detallado del caso de uso *Agregar tarea asociada al usuario*. En el diagrama se puede apreciar los componentes que interactuan: controllers, casos de uso, repositories en las distintas capas de la arquitectura limpia:
+
+![Diagrama de componentes](docs/images/challenge-detail-design.png)
+
+## Open API
+
+Se ha generado un archivo .yml con la documentación inicial de la API considerando el análisis que se ha realizado hasta ahora. El archivo se encuentra [AQUI](docs/swagger/challenge-swagger.yml)
+
+Se ha subido la documentación de la API a la siguiente URL:
+
+[https://app.swaggerhub.com/apis/FAQ_CODES/Agilesoft/1.0.0](https://app.swaggerhub.com/apis/FAQ_CODES/Agilesoft/1.0.0)
+
+Imagen de referencia de la API:
+
+![https://app.swaggerhub.com/apis/FAQ_CODES/Agilesoft/1.0.0](docs/images/challenge-swagger.png)
+
+
 # Implementación
 
 ## Estructura de carpetas

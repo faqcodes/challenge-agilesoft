@@ -2,8 +2,7 @@ package com.faqcodes.agilesoft.tasks.application;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.ArrayList;
 
 import com.faqcodes.agilesoft.shared.application.UseCase;
 import com.faqcodes.agilesoft.shared.models.MessageResult;
@@ -11,9 +10,7 @@ import com.faqcodes.agilesoft.tasks.infrastructure.repositories.TaskData;
 import com.faqcodes.agilesoft.tasks.infrastructure.repositories.TaskRepository;
 import com.faqcodes.agilesoft.tasks.models.CreateRequest;
 import com.faqcodes.agilesoft.tasks.models.CreateResponse;
-import com.faqcodes.agilesoft.users.application.GetUseCase;
 import com.faqcodes.agilesoft.users.infrastructure.repositories.UserData;
-import com.faqcodes.agilesoft.users.infrastructure.repositories.UserRepository;
 import com.faqcodes.agilesoft.users.models.GetRequest;
 import com.faqcodes.agilesoft.users.models.GetResponse;
 
@@ -38,11 +35,9 @@ public class CreateUseCase implements UseCase<CreateRequest, CreateResponse> {
     }
 
     final var user = response.getData();
-
     // Create the UserData
     final var userData = UserData.builder()
         .username(user.getUsername())
-        .name(user.getName())
         .build();
 
     // Create the TaskData
@@ -54,21 +49,11 @@ public class CreateUseCase implements UseCase<CreateRequest, CreateResponse> {
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
         .status(false)
-        .user(userData)
+        .username(user.getUsername())
+        // .user(userData)
         .build();
 
-    System.out.println(task);
-
     final var result = repository.save(task);
-    System.out.println(result);
-
-    // // Obtener la tarea desde el resultado
-    // final var newTask = result.getTasks().stream()
-    // .filter(t -> taskId.equals(t.getTaskId())) // Puedes ajustar el filtro según
-    // tus necesidades
-    // .findFirst()
-    // .orElseThrow(() -> new RuntimeException("La tarea guardada no se encontró en
-    // el usuario actual"));
 
     var data = CreateResponse.builder()
         .taskId(result.getTaskId().toString())

@@ -34,27 +34,10 @@ public class GetUseCase implements UseCase<GetRequest, GetResponse> {
     final var data = GetResponse.builder()
         .name(user.getName())
         .username(user.getUsername())
-        .tasks(user.getTasks()
-            .stream()
-            .map(TaskMapper::toTaskEntity)
-            .collect(Collectors.toList()))
         .build();
 
     // Return success information
     return new MessageResult<>("SUCCESS", "El usuario se ha obtenido satisfactoriamente", null, data);
-  }
-
-  private class TaskMapper {
-    public static TaskEntity toTaskEntity(TaskData taskData) {
-      return TaskEntity.builder()
-          .taskId(taskData.getTaskId().toString())
-          .name(taskData.getName())
-          .description(taskData.getDescription())
-          .createdAt(taskData.getCreatedAt())
-          .updatedAt(taskData.getUpdatedAt())
-          .status(taskData.isStatus())
-          .build();
-    }
   }
 
 }

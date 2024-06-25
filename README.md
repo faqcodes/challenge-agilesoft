@@ -111,13 +111,15 @@ Para el proyecto se utilizará el contenedor Docker para su simplicidad de uso. 
 
 ```
 docker pull faqcodes/challenge-agilesoft
+docker run -p 8080:8080 faqcodes/challenge-agilesoft
 ```
 
-Para la construcción y ejecución se utilizan las siguientes sentencias:
+Si se requiere construir y ejecutar se utilizan las siguientes sentencias:
 
 ```
 docker build -t challenge-agilesoft .
 docker run -p 8080:8080 challenge-agilesoft
+
 ```
 
 ## Uso de la Aplicación
@@ -135,6 +137,10 @@ curl --location 'localhost:8080/api/users/signup' \
     "password": "fquiroz"
 }'
 ```
+RESULTADO:
+```
+{"code":"SUCCESS","message":"El usuario se ha creado satisfactoriamente","errors":null,"data":{"name":"felipe","username":"fquiroz","links":[]}}
+```
 
 2. Inicio de sesión de un usuario (signin). El inicio de sesión retornará un TOKEN que se debe utilizar para las peticiones subsiguientes
 
@@ -146,34 +152,48 @@ curl --location 'localhost:8080/api/users/signin' \
     "password": "fquiroz"
 }'
 ```
+RESULTADO:
+```
+{"code":"SUCCESS","message":"Se ha iniciado sesión satisfactoriamente","errors":null,"data":{"token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk4MzI0LCJleHAiOjE3MTkyOTg2MjR9.ayg79KUbjdCo7qDih_BQ8kJhgBcfw-K6YQ7DbITdX6o","links":[]}}
+```
 
 3. Crear una tarea:
 
 ```
 curl --location 'localhost:8080/api/tasks' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk2Mjc3LCJleHAiOjE3MTkyOTY1Nzd9.dmU9Xx8bmxpR2npaABCQW75YhrdR7kdxoOxlYxKUbdI' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk4MzI0LCJleHAiOjE3MTkyOTg2MjR9.ayg79KUbjdCo7qDih_BQ8kJhgBcfw-K6YQ7DbITdX6o' \
 --data '{
     "name": "tarea 1",
     "description": "descripcion 1"
 }'
 ```
-
+RESULTADO:
+```
+{"code":"SUCCESS","message":"La tarea se ha creado satisfactoriamente","errors":null,"data":{"taskId":"f559b7bf-dc89-4402-bfac-34fe35855b55","name":"tarea 1","description":"descripcion 1","createdAt":"2024-06-25T06:53:36.198867940","updatedAt":"2024-06-25T06:53:36.198905947","status":false}}
+```
 4. Obtener la lista de tareas:
 
 ```
 curl --location 'localhost:8080/api/tasks' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk2Mjc3LCJleHAiOjE3MTkyOTY1Nzd9.dmU9Xx8bmxpR2npaABCQW75YhrdR7kdxoOxlYxKUbdI'
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk4MzI0LCJleHAiOjE3MTkyOTg2MjR9.ayg79KUbjdCo7qDih_BQ8kJhgBcfw-K6YQ7DbITdX6o'
 ```
-
+RESULTADO:
+```
+{"code":"SUCCESS","message":"Las tareas se han obtenido satisfactoriamente","errors":null,"data":{"tasks":[{"taskId":"f559b7bf-dc89-4402-bfac-34fe35855b55","name":"tarea 1","description":"descripcion 1","createdAt":"2024-06-25T06:53:36.198868","updatedAt":"2024-06-25T06:53:36.198906","status":false}]}}
+```
 5. Actualizar una tarea. Aquí se marca una tarea como realizada (status = true)
 
 ```
 curl --location --request PUT 'localhost:8080/api/tasks' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk2Mjc3LCJleHAiOjE3MTkyOTY1Nzd9.dmU9Xx8bmxpR2npaABCQW75YhrdR7kdxoOxlYxKUbdI' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk4MzI0LCJleHAiOjE3MTkyOTg2MjR9.ayg79KUbjdCo7qDih_BQ8kJhgBcfw-K6YQ7DbITdX6o' \
 --data '{
-    "taskId": "f781ad7d-669e-4c9d-9418-103ce11c87f7",
+    "taskId": "f559b7bf-dc89-4402-bfac-34fe35855b55",
     "status": true
 }'
+```
+RESULTADO:
+```
+{"code":"SUCCESS","message":"La tarea se ha actualizado satisfactoriamente","errors":null,"data":{"taskId":"f559b7bf-dc89-4402-bfac-34fe35855b55","name":"tarea 1","description":"descripcion 1","createdAt":"2024-06-25T06:53:36.198868","updatedAt":"2024-06-25T06:55:34.351765528","status":true}}
 ```

@@ -117,7 +117,63 @@ Para la construcción y ejecución se utilizan las siguientes sentencias:
 
 ```
 docker build -t challenge-agilesoft .
-docker run -p 3000:3000 challenge-agilesoft
+docker run -p 8080:8080 challenge-agilesoft
 ```
 
 ## Uso de la Aplicación
+
+Los siguientes comandos cURL se utilizan para el uso de la aplicación:
+
+1. Registro de un usuario (signup):
+
+```
+curl --location 'localhost:8080/api/users/signup' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "felipe",
+    "username": "fquiroz",
+    "password": "fquiroz"
+}'
+```
+
+2. Inicio de sesión de un usuario (signin). El inicio de sesión retornará un TOKEN que se debe utilizar para las peticiones subsiguientes
+
+```
+curl --location 'localhost:8080/api/users/signin' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username": "fquiroz",
+    "password": "fquiroz"
+}'
+```
+
+3. Crear una tarea:
+
+```
+curl --location 'localhost:8080/api/tasks' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk2Mjc3LCJleHAiOjE3MTkyOTY1Nzd9.dmU9Xx8bmxpR2npaABCQW75YhrdR7kdxoOxlYxKUbdI' \
+--data '{
+    "name": "tarea 1",
+    "description": "descripcion 1"
+}'
+```
+
+4. Obtener la lista de tareas:
+
+```
+curl --location 'localhost:8080/api/tasks' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk2Mjc3LCJleHAiOjE3MTkyOTY1Nzd9.dmU9Xx8bmxpR2npaABCQW75YhrdR7kdxoOxlYxKUbdI'
+```
+
+5. Actualizar una tarea. Aquí se marca una tarea como realizada (status = true)
+
+```
+curl --location --request PUT 'localhost:8080/api/tasks' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcXVpcm96IiwiaWF0IjoxNzE5Mjk2Mjc3LCJleHAiOjE3MTkyOTY1Nzd9.dmU9Xx8bmxpR2npaABCQW75YhrdR7kdxoOxlYxKUbdI' \
+--data '{
+    "taskId": "f781ad7d-669e-4c9d-9418-103ce11c87f7",
+    "status": true
+}'
+```
